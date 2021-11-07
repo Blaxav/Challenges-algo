@@ -2,6 +2,25 @@ from itertools import chain
 from sys import argv
 
 
+def find_and_print_node_and_balance_weight(total_weights, n, nodes, dico_weights):
+    for w in dico_weights:
+        # Searching for the node which is the only one with its value
+        # this is the node creating unbalance
+        if len(dico_weights[w]) == 1:
+            unbal_node = dico_weights[w][0]
+            print("Unbalance at : ", dico_weights[w][0])
+            # The true value of the node depend if it is
+            # lower or grater than the others
+            if nodes[unbal_node].total_weight == min(total_weights):
+                print(
+                    "Value : ", nodes[unbal_node].weight
+                    + max(total_weights) - min(total_weights))
+            else:
+                print(
+                    "Value : ", nodes[unbal_node].weight
+                    - max(total_weights) + min(total_weights))
+
+
 def find_first_node_unbalanced(total_weights, n, nodes, first_unbalanced):
     # Compute the value the first time unbalanced nodes appear
     if not first_unbalanced:
@@ -17,22 +36,11 @@ def find_first_node_unbalanced(total_weights, n, nodes, first_unbalanced):
                                      if nodes[m].total_weight == min(total_weights)]
             }
 
-            for w in dico_weights:
-                # Searching for the node which is the only one with its value
-                # this is the node creating unbalance
-                if len(dico_weights[w]) == 1:
-                    unbal_node = dico_weights[w][0]
-                    print("Unbalance at : ", dico_weights[w][0])
-                    # The true value of the node depend if it is
-                    # lower or grater than the others
-                    if nodes[unbal_node].total_weight == min(total_weights):
-                        print(
-                            "Value : ", nodes[unbal_node].weight
-                            + max(total_weights) - min(total_weights))
-                    else:
-                        print(
-                            "Value : ", nodes[unbal_node].weight
-                            - max(total_weights) + min(total_weights))
+            find_and_print_node_and_balance_weight(
+                total_weights, n, nodes, dico_weights)
+
+            # First node with unbalance has been found, add it to the list
+            # (which will contain only it) so that this will never be called again
             first_unbalanced.append(n)
 
 
