@@ -97,6 +97,12 @@ def get_divisors_amount(num):
             count += 2
     return count
 
+def gcd(x: int, y: int):
+    while y:
+        x, y = y, x % y
+    
+    return x
+
 
 class Tests(unittest.TestCase):
 
