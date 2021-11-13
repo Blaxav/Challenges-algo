@@ -39,6 +39,36 @@ def run_hash(numbers, twists, c_pos, skip_size):
     return (numbers, c_pos, skip_size)
 
 
+def knot_hash(string, N):
+
+    data = convert_to_ascii(string)
+    data = add_suffix(data)
+
+    c_pos = 0
+    skip_size = 0
+
+    repeat = 64
+    numbers = list(range(N))
+    for k in range(repeat):
+        numbers, c_pos, skip_size = run_hash(numbers, data, c_pos, skip_size)
+
+    dense_hash = []
+    for k in range(16):
+        total = numbers[16*k] ^ numbers[16*k + 1]
+        for j in range(16*k + 2, 16*(k+1)):
+            total ^= numbers[j]
+        dense_hash.append(total)
+
+    result = ''
+    for t in dense_hash:
+        hexa = hex(t)[2:]
+        if len(hexa) == 1:
+            hexa = "0" + hexa
+        result += hexa
+
+    return result
+
+
 if __name__ == '__main__':
 
     # Part 1
@@ -92,3 +122,5 @@ if __name__ == '__main__':
         result += hexa
 
     print(result)
+
+    print(knot_hash("", 256))
