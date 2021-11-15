@@ -23,22 +23,6 @@ def hash_to_binary(hash):
     return result
 
 
-class Block_line:
-    def __init__(self, row, beg, end):
-        self.row = row
-        self.beg = beg
-        self.end = end
-
-
-class Region:
-    '''
-    Region : defines a list of Blocks lines contiguous to each other
-    '''
-
-    def __init__(self, blocks):
-        self.blocks = blocks
-
-
 def neighbors(node):
     if node[0] < 127:
         yield (node[0] + 1, node[1])
@@ -94,22 +78,7 @@ if __name__ == '__main__':
     print("Part 1 : ", total)
 
     # Part 2
-    # idea : Create the contiguous regions on each line, and then aggergate them by rows
-    # a region is made of two indices [i,j)
-    regions = deque()
-    line_cnt = 0
-    for line in memory:
-        id = 0
-        regions.append([])
-        while id < len(line):
-            if line[id] == 1:
-                beg = id
-                while id < len(line) and line[id] == 1:
-                    id += 1
-                regions.append(Region([Block_line(line_cnt, beg, id)]))
-            else:
-                id += 1
-
-        line_cnt += 1
-
+    # Idea : starting from a 1 node, finding its 1 neighbors and setting it to 0
+    # iterating until no neighbor is 1 : this is one block
+    # going to the next 1 node
     print("Part 2 : ", path_finding_blocks(memory))
