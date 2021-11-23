@@ -47,17 +47,24 @@ if __name__ == '__main__':
     input_data.close()
 
     programs = [c for c in "abcdefghijklmnop"]
-    #programs = [c for c in "abcde"]
-
     for move in moves:
         programs = dance(programs, move)
 
     print("Part 1 : ", "".join(programs))
 
     programs = [c for c in "abcdefghijklmnop"]
-    for k in range(1000000000):
+    all_progs = [programs[:]]
+
+    N = 1000000000
+    for k in range(N):
+
         for move in moves:
             programs = dance(programs, move)
-        if k % 1e7 == 0:
-            print(k, "  ", programs)
-    print("Part 2 : ", "".join(programs))
+
+        # Searching for a cycle, when we find the first state of programs, we can stop
+        if programs == all_progs[0]:
+            break
+
+        all_progs.append(programs[:])
+
+    print("Part 2 : ", "".join(all_progs[N % len(all_progs)]))
