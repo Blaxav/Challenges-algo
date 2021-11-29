@@ -137,11 +137,13 @@ if __name__ == '__main__':
             # try finding index of "ready" in state, if it fails,
             # both programs terminated
             state.index("ready")
-
+            
             # run current program until it stops
             opid[cid] = run(registers2[cid], operations,
                             state, queue, send, cid, opid[cid])
 
+            if cid == 1:
+                break
             #print("Program ", cid, "  ", state, "  ", queue)
 
             # change running program
