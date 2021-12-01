@@ -142,8 +142,6 @@ if __name__ == '__main__':
             opid[cid] = run(registers2[cid], operations,
                             state, queue, send, cid, opid[cid])
 
-            if cid == 1:
-                break
             #print("Program ", cid, "  ", state, "  ", queue)
 
             # change running program
