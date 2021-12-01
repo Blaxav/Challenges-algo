@@ -1,59 +1,25 @@
-import re
-import time
-from collections import defaultdict
-from math import sqrt
+from sys import argv
 
+if __name__ == '__main__':
 
-def readFile(filePath):
-    fileIn = open(filePath)
-    for line in fileIn:
-        instructions = [l.rstrip().lstrip() for l in line.split(",")]
-        break
-    return instructions
+    depth = []
+    input_data = open(argv[1], 'r')
+    for line in input_data:
+        depth.append(int(line.rstrip('\n')))
+    input_data.close()
 
-def update_direction(posInd, instruction):
-    if instruction == 'L':
-        posInd = (posInd - 1) % 4
-    elif instruction == 'R':
-        posInd = (posInd + 1) % 4
-    
-    return posInd
+    previous_depth = depth[0]
+    increase_cnt = 0
+    for c_depth in depth[1:]:
+        increase_cnt += int(c_depth > previous_depth)
+        previous_depth = c_depth
+    print('Part 1 : ', increase_cnt)
 
-if __name__ == '__main__' :
-    start = time.time()
+    depth_slide = [sum(depth[j:j+3]) for j in range(len(depth) - 2)]
 
-    instructions = readFile("inputs/01.txt")
-    
-    directions = [ [0,1], [1,0], [0,-1], [-1,0] ]
-    posInd = 0
-    pos = [0,0]
-    
-    grid = []
-    for k in range(500):
-        grid.append([0] * 500)
-    
-    found = False
-    for instr in instructions:
-        posInd = update_direction(posInd, instr[0])
-        
-        print(pos, instr, directions[posInd], end="  ->  ")
-        for k in range(int("".join(instr[1:] ))):
-            for i in range(2):
-                pos[i] += directions[posInd][i]
-
-            grid[pos[0]][pos[1]] += 1
-            if grid[pos[0]][pos[1]] >=2 :
-                print("Found twice: ", pos, sum([abs(k) for k in pos]))
-                found = True
-        print(pos)
-
-        if found:
-            break
-
-    print("Result: ", sum([abs(k) for k in pos]))
-
-
-    
-    end = time.time()
-    print()
-    print("Time: %10.6fs" % (end-start))
+    previous_depth = depth_slide[0]
+    increase_cnt = 0
+    for c_depth in depth_slide[1:]:
+        increase_cnt += int(c_depth > previous_depth)
+        previous_depth = c_depth
+    print('Part 2 : ', increase_cnt)
