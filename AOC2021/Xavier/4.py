@@ -70,14 +70,20 @@ if __name__ == '__main__':
 
     # Game
     winners = [0] * len(grids)
+    first_win = True
     for val in bingo_draw:
         for g in range(len(grids)):
-            grids[g].check(val)
+            if not winners[g]:
+                grids[g].check(val)
 
-            if grids[g].win():
-                print("Winner grid ", g, " ! ")
-                print("Part 1 : ", sum(grids[g].unmark_numbers()) * val)
-                winners[g] = 1
-
-                if sum(winners) == len(grids):
-                    exit()
+                if grids[g].win():
+                    if first_win:
+                        print("First winner grid ", g, " ! ")
+                        print("Part 1 : ", sum(
+                            grids[g].unmark_numbers()) * val)
+                        first_win = False
+                    if sum(winners) == len(grids) - 1:
+                        print("Last  winner grid ", g, " ! ")
+                        print("Part 2 : ", sum(
+                            grids[g].unmark_numbers()) * val)
+                    winners[g] = 1
