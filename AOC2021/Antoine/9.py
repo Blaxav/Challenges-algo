@@ -11,9 +11,9 @@ def readFile():
 
 def get_neighbours(position: int, scheme: list):
     scheme_width = int(sqrt(len(scheme)))
-    if position % 100 == 0:
+    if position % scheme_width == 0:
         return (position + delta for delta in [-scheme_width, 1, scheme_width] if position + delta in range(len(scheme)))
-    elif (position + 1) % 100 == 0:
+    elif (position + 1) % scheme_width == 0:
         return (position + delta for delta in [-scheme_width, -1, scheme_width] if position + delta in range(len(scheme)))
     else:
         return (position + delta for delta in [-scheme_width, -1, 1, scheme_width] if position + delta in range(len(scheme)))
