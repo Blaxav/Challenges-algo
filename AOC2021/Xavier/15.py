@@ -57,7 +57,7 @@ if __name__ == '__main__':
     grid = []
     input_data = open(argv[1], 'r')
     for line in input_data:
-        grid.append([int(i) for i in line.rstrip('\n')])
+        grid.append([int(i) for i in line.rstrip('\n\r')])
     input_data.close()
 
     n = len(grid)
@@ -76,35 +76,20 @@ if __name__ == '__main__':
     print("Heuristic = ", best_dist)
 
     # Algortihm
-    open_path = deque([(Path(0, 0, 0))])
+    open_path = deque([(0, 0)])
     it = 0
-    already = False
     while open_path:
+        (i, j) = open_path.popleft()
 
-        current_path = open_path.popleft()
-
-        if current_path.dist < best_dist:
-            for (k, p) in current_path.neighbors(n, m):
-                already = False
+        if distances[i][j] < best_dist:
+            for (k, p) in neighbors(i, j, n, m):
                 if (k, p) == (n-1, m-1):
                     best_dist = min(
-                        (best_dist, current_path.dist + risk(k, p, grid, n, m)))
-                elif current_path.dist + risk(k, p, grid, n, m) <= min((distances[k][p], best_dist)):
-                    distances[k][p] = current_path.dist + \
-                        risk(k, p, grid, n, m)
-                    if (k, p) in open_path:
-                        print("coucou")
-                        id = open_path.find((k, p))
-                    # for id in range(len(open_path)):
-                    #    if (k, p) == (open_path[id].i, open_path[id].j):
-                        # print("coucou")
-                        open_path[id] = Path(
-                            k, p, min(open_path[id].dist, current_path.dist + risk(k, p, grid, n, m)))
-                        already = True
-                        break
-                    if not already:
-                        open_path.append(
-                            Path(k, p, current_path.dist + risk(k, p, grid, n, m)))
+                        (best_dist, distances[i][j] + risk(k, p, grid, n, m)))
+                elif distances[i][j] + risk(k, p, grid, n, m) <= min((distances[k][p], best_dist)):
+                    distances[k][p] = distances[i][j] + risk(k, p, grid, n, m)
+                    if (k, p) not in open_path:
+                        open_path.append((k, p))
         it += 1
         if it % 1000000 == 0:
             print(best_dist, "  ", len(open_path))
@@ -112,36 +97,24 @@ if __name__ == '__main__':
     print("%-10.3fs" % (time() - t0))
 
     # Algortihm
-    open_path = deque([Path(0, 0, 0)])
+    open_path = deque([(0, 0)])
     it = 0
-    best_dist = 100*best_dist
-    already = False
+    best_dist = 10*best_dist
     while open_path:
+        (i, j) = open_path.popleft()
 
-        current_path = open_path.popleft()
-
-        if current_path.dist < best_dist:
-            for (k, p) in current_path.neighbors(5*n, 5*m):
-                already = False
-                # print(k, p, distances[k][p])
+        if distances[i][j] < best_dist:
+            for (k, p) in neighbors(i, j, 5*n, 5*m):
                 if (k, p) == ((5*n)-1, (5*m)-1):
+                    #print("coucou ", distances[i][j] + risk(k, p, grid, n, m))
                     best_dist = min(
-                        (best_dist, current_path.dist + risk(k, p, grid, n, m)))
-                elif current_path.dist + risk(k, p, grid, n, m) <= min((distances[k][p], best_dist)):
-                    distances[k][p] = current_path.dist + \
-                        risk(k, p, grid, n, m)
-                    for id in range(len(open_path)):
-                        if (k, p) == (open_path[id].i, open_path[id].j):
-                            # print("coucou")
-                            open_path[id] = Path(
-                                k, p, min(open_path[id].dist, current_path.dist + risk(k, p, grid, n, m)))
-                            already = True
-                            break
-                    if not already:
-                        open_path.append(
-                            Path(k, p, current_path.dist + risk(k, p, grid, n, m)))
+                        (best_dist, distances[i][j] + risk(k, p, grid, n, m)))
+                elif distances[i][j] + risk(k, p, grid, n, m) <= min((distances[k][p], best_dist)):
+                    distances[k][p] = distances[i][j] + risk(k, p, grid, n, m)
+                    if (k, p) not in open_path:
+                        open_path.append((k, p))
         it += 1
-        if it % 10000 == 0:
+        if it % 100000 == 0:
             print(best_dist, "  ", len(open_path))
-    print("Part 2 : ", it, " iterations, val = ", best_dist)
+    print("Part 1 : ", it, " iterations, val = ", best_dist)
     print("%-10.3fs" % (time() - t0))
