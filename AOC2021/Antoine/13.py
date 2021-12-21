@@ -48,6 +48,7 @@ class Tests(unittest.TestCase):
 if __name__ == "__main__":
     # unittest.main()
     coordinates, instructions = readFile()
+    print(max(coordinates, key=lambda x:x[0]))
     p1 = part1(coordinates, instructions, 1)
     print(f"Part 1: {len(set(p1.values()))}")
     print(f"Part 2:")
