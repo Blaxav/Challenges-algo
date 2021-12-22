@@ -14,29 +14,6 @@ def neighbors(i, j, n, m):
         yield(i, j+1)
 
 
-class Path:
-    def __init__(self, i, j, dist):
-        self.i = i
-        self.j = j
-        self.dist = dist
-
-    def __gt__(self, other):
-        return self.dist > other.dist
-
-    def neighbors(self, n, m):
-        if self.i > 0:
-            yield(self.i-1, self.j)
-        if self.i < n-1:
-            yield(self.i+1, self.j)
-        if self.j > 0:
-            yield(self.i, self.j-1)
-        if self.j < m-1:
-            yield(self.i, self.j+1)
-
-    def __contains__(self, node):
-        return self.i == node[0] and self.j == node[1]
-
-
 def risk(i, j, grid, n, m):
     k = i % n
     p = j % m
@@ -44,11 +21,6 @@ def risk(i, j, grid, n, m):
     r = i // n
     e = j // m
     risk += e + r
-    '''if ((risk-1) % 10) + 1 != grid[k][p]:
-        print("Stop ! ")
-        print(grid[k][p])
-        print(((risk-1) % 10) + 1)
-        exit()'''
     return ((risk-1) % 9) + 1
 
 
@@ -106,7 +78,6 @@ if __name__ == '__main__':
         if distances[i][j] < best_dist:
             for (k, p) in neighbors(i, j, 5*n, 5*m):
                 if (k, p) == ((5*n)-1, (5*m)-1):
-                    #print("coucou ", distances[i][j] + risk(k, p, grid, n, m))
                     best_dist = min(
                         (best_dist, distances[i][j] + risk(k, p, grid, n, m)))
                 elif distances[i][j] + risk(k, p, grid, n, m) <= min((distances[k][p], best_dist)):
@@ -116,5 +87,5 @@ if __name__ == '__main__':
         it += 1
         if it % 100000 == 0:
             print(best_dist, "  ", len(open_path))
-    print("Part 1 : ", it, " iterations, val = ", best_dist)
+    print("Part 2 : ", it, " iterations, val = ", best_dist)
     print("%-10.3fs" % (time() - t0))
