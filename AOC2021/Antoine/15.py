@@ -32,35 +32,24 @@ def generate_map(scheme: list):
     return new_scheme
 
 class Tree:
-    def __init__(self, firstNode, scheme):
+    def __init__(self, first_position, scheme):
         # Données du problème
         self.states = defaultdict(lambda: inf)
-        self.states[firstNode.position] = 0
+        self.states[first_position] = 0
         # Données relatives à l'arbre
         self.bestValue = sum(scheme)
-        self.openNodes = deque([firstNode])
-        self.firstNode = firstNode
+        self.open_positions = deque([first_position])
         self.scheme = scheme
     
     def expandTree(self):
-        currentNode = self.openNodes.popleft() # .pop() -> profondeur, .popleft() -> largeur
-        if currentNode.position == len(self.scheme) - 1 and self.states[currentNode.position] < self.bestValue: # Définir ici la condition de succès
-            self.bestValue = self.states[currentNode.position]
+        current_position = self.open_positions.popleft() # .pop() -> profondeur, .popleft() -> largeur
+        if current_position == len(self.scheme) - 1 and self.states[current_position] < self.bestValue: # Définir ici la condition de succès
+            self.bestValue = self.states[current_position]
         else:
-            for son in currentNode.reachableNodes(self.scheme):
-                if self.states[currentNode.position] + scheme[son.position] < min(self.bestValue, self.states[son.position]):
-                    self.states[son.position] = self.states[currentNode.position] + scheme[son.position]
-                    self.openNodes.append(son)
-
-
-class Node:
-    def __init__(self, position):
-        self.position = position
-    
-    def reachableNodes(self, scheme):
-        # Définir ici comment rechercher les prochains noeuds
-        for neighbour_position in get_neighbours_position(self.position, scheme):
-            yield Node(neighbour_position)
+            for son_position in get_neighbours_position(current_position, self.scheme):
+                if self.states[current_position] + self.scheme[son_position] < min(self.bestValue, self.states[son_position]):
+                    self.states[son_position] = self.states[current_position] + self.scheme[son_position]
+                    self.open_positions.append(son_position)
 
 class Tests(unittest.TestCase):
 
@@ -68,9 +57,9 @@ class Tests(unittest.TestCase):
         pass
 
 def part1(scheme: list):
-    tree = Tree(Node(0), scheme)
+    tree = Tree(0, scheme)
     comp = 0
-    while tree.openNodes:
+    while tree.open_positions:
         tree.expandTree()
         comp += 1
     return tree.bestValue, comp
