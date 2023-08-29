@@ -7,7 +7,6 @@ def readFile():
     # On renvoie le fichier d'entrée sous forme d'une liste de string
     with open(__file__[:-3] + "-" + "input.txt", "r") as f:
         return [int(i.strip()) for i in f.readlines()]
-
             
 def part1(scheme: list):
     return sum(scheme)
@@ -23,7 +22,7 @@ def part2(scheme: list):
             count += 1
             frequencies.add(current_frequency)
             current_frequency += change
-
+    
 class Tests(unittest.TestCase):
 
     def testP1(self):
